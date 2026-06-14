@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Full-Stack CRUD UI
 
-## Getting Started
+> Next.js App Router frontend for a FastAPI + Postgres backend. Four pages, full CRUD on a `books` resource, dynamic routes, loading and error states on every fetching page, env-driven API base URL.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat&logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+
+Backend: [fastapi-postgres-crud](https://github.com/Auth3nticAI/fastapi-postgres-crud)
+
+---
+
+![books list page](screenshots/books.png)
+
+## What's interesting
+
+- **Dynamic route** at `app/books/[id]/page.tsx` — Next 16's async `params: Promise<{id: string}>` unwrapped with `use()` from React.
+- **`useEffect` with cleanup** — `let cancelled = false` pattern so a stale fetch from a previous mount can't `setState` over fresh data (matters in dev strict-mode where effects run twice).
+- **Real form handling** — controlled inputs, `isSubmitting` state, redirect on success via `useRouter().push()`.
+- **Empty / loading / error states** distinguished and styled on every fetching page — no flashes, no blank pages.
+
+![add book form](screenshots/books-new.png)
+![book detail with status + rating + delete](screenshots/book-detail.png)
+
+## Stack
+
+- Next.js 16 App Router + TypeScript
+- Tailwind 4
+- `NEXT_PUBLIC_API_URL` env var (defaults to `http://127.0.0.1:8000`)
+
+## Run
 
 ```bash
+# Backend must be running on :8000 first
+
+npm install
+echo "NEXT_PUBLIC_API_URL=http://127.0.0.1:8000" > .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project layout
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+app/
+├── layout.tsx                  # Shared nav + footer
+├── page.tsx                    # Home / hero
+└── books/
+    ├── page.tsx                # List
+    ├── new/page.tsx            # Add form
+    └── [id]/page.tsx           # Detail + update + delete
+lib/
+└── types.ts                    # Shared Book type
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Background
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built as the Week 4 lab for **CSE552 — Fullstack Software Development in the Age of AI Agents**. Same domain extended with AI in later weeks and capstoned at [book-tracker-ai](https://github.com/Auth3nticAI/book-tracker-ai).
